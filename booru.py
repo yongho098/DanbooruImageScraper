@@ -5,7 +5,6 @@ import requests, os, bs4, webbrowser, pyinputplus as pyip, re, time, random, sys
 from urllib.parse import unquote
 from pathlib import Path
 
-urltest = 'https://danbooru.donmai.us/posts/6009825?q=kamisato_ayaka'
 lookup = pyip.inputStr('What to search on Danbooru? ')
 
 # #finds google results first
@@ -27,7 +26,6 @@ p = 1
 absolute_path = os.path.dirname(__file__)
 relative_path = "Danbooru download"
 homeFolder = os.path.join(absolute_path, relative_path)
-# homeFolder = Path('C:/Users/yongh\Desktop/mu/booru download')
 
 
 # make a function to download the image
@@ -40,7 +38,7 @@ def downloadImage(url2):
         try:
             imageElem = soup3.find_all('source')
             if "," in imageElem[-1].get('srcset'):
-                # for videos with children
+                # for videos with multiple versions
                 imageElem = soup3.find_all('image')
                 x = imageElem[-1].get('src')
             else:
@@ -69,7 +67,7 @@ if yesno == 'no':
 os.makedirs(f'{homeFolder}\{lookup.lower()}', exist_ok=True)
 
 #scrape and download
-res = requests.get(url) # change
+res = requests.get(url)
 res.raise_for_status()
 soup = bs4.BeautifulSoup(res.text, 'html.parser')
 nextElem = soup.find_all('a', {'class': 'paginator-next'})
@@ -92,5 +90,4 @@ while nextElem != []:
     print('next page')
     time.sleep(10)
 
-# downloadImage(urltest)
 print('done')
